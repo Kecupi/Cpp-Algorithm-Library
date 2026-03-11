@@ -41,6 +41,34 @@ namespace Sorting{
         }
     }
 
+    template<typename T, typename Compare = std::less<T>>
+    int Partition(std::vector<T>& array, int low, int high, Compare comp = Compare()){
+        int pivot = array[high];
+        int idx = low - 1;
+        for (int jdx = low; jdx < high; jdx++){
+            if (comp(array[jdx], pivot)){
+                idx++;
+                MemberSwap(array[idx], array[jdx]);
+            }
+        }
+        MemberSwap(array[idx+1], array[high]);
+        return idx+1;
+    }
+
+    template<typename T, typename Compare = std::less<T>>
+    void QuickSortManual(std::vector<T>& array, int low, int high, Compare comp = Compare()){
+        if (low < high){
+            int part_idx = Partition(array, low, high, comp);
+            QuickSortManual(array, low, part_idx - 1, comp);
+            QuickSortManual(array, part_idx + 1, high, comp);
+        }
+    }
+
+    template <typename T, typename Compare = std::less<T>>
+    void QuickSortAuto(std::vector<T>& array, Compare comp = Compare()){
+        QuickSortManual(array, 0, array.size() - 1, comp);
+    }
+
 }
 
 #endif
