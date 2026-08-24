@@ -42,3 +42,6 @@ TYPED_TEST(SortingSuite, SelectionSort){
 TYPED_TEST(SortingSuite, QuickSort){
     this->RunTest([](std::vector<TypeParam>& array){Sort::QuickSort(array);});
 }
+TYPED_TEST(SortingSuite, QuickSort){
+    this->RunTest([](std::vector<TypeParam>& array){Sort::InsertionSort(array);});
+}

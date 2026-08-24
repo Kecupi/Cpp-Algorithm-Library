@@ -125,6 +125,28 @@ namespace Sort{
         if (array.size() == 0) return;
         detail::QuickSortGeneral(array, 0, array.size() - 1, comp);
     }
+
+    /**
+        @brief Sorts vector of template object using insertion sort function
+        @tparam T type of template objects to be swapped
+        @tparam Compare type of comparator function used for sorting
+        @param array vector of template object using bubble sort
+        @param comp comparator to be used to sort array
+    */
+    template <typename T, typename Compare = std::less<T>>
+    void InsertionSort(std::vector<T>& array, Compare comp = Compare()){
+        if (array.size() == 0) return;
+        size_t arr_size = array.size();
+        for (int idx = 1; idx < arr_size; idx++){
+            T key = array[idx];
+            int jdx = idx - 1;
+            while ((jdx >= 0) && (comp(key, array[jdx]))){
+                detail::MemberSwap(array[jdx + 1], array[jdx]);
+                jdx--;
+            }
+            array[jdx+1] = key;
+        }
+    }
 }
 
 #endif
