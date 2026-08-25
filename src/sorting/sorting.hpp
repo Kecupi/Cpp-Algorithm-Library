@@ -21,6 +21,7 @@
 #define SORTING_HPP
 
 #include <vector>
+#include <algorithm>
 #include <functional>
 #include <utility>
 
@@ -39,6 +40,15 @@ namespace Sort{
             b = std::move(tmp);
         }
 
+        /**
+            @brief Patrition function (Lomuto) for quick sort
+            @tparam T type of template objects to be swapped
+            @tparam Compare type of comparator function used for sorting
+            @param array vector of template object to be sorted
+            @param low lowest index of vector to be sorted
+            @param high highest index of vector to be sorted
+            @param comp comparator to be used to sort array
+        */
         template<typename T, typename Compare = std::less<T>>
         int Partition(std::vector<T>& array, int low, int high, Compare comp = Compare()){
             int pivot = array[high];
@@ -57,10 +67,10 @@ namespace Sort{
             @brief Sorts vector of template object using quick sort, can sort just part based on input
             @tparam T type of template objects to be swapped
             @tparam Compare type of comparator function used for sorting
-            @param array vector of template object using bubble sort
-            @param comp comparator to be used to sort array
+            @param array vector of template object to be sorted
             @param low lowest index of vector to be sorted
             @param high highest index of vector to be sorted
+            @param comp comparator to be used to sort array
         */
         template<typename T, typename Compare = std::less<T>>
         void QSortHelp(std::vector<T>& array, int low, int high, Compare comp = Compare()){
@@ -76,23 +86,22 @@ namespace Sort{
         @brief Merge function for merge sort implementations
         @tparam T type of template objects to be swapped
         @tparam Compare type of comparator function used for sorting
-        @param array vector of template object using bubble sort
-        @param comp comparator to be used to sort array
-        @param left lowest index of vector to be sorted
+        @param dest vector of template object to save saved halves into
         @param left lowest index of vector to be sorted
         @param right highest index of vector to be sorted
-        @param copy copy of vector to be used for merging
+        @param comp comparator to be used to sort dest
+        @param dest vector of template object containing halves to be merged
         */
         template <typename T, typename Comp = std::less<T>>
-        void Merge(std::vector<T>& array, int left, int mid, int right, Compare comp = compare(), std::vector<T>& copy){
+        void Merge(std::vector<T>& dest, int left, int mid, int right, Compare comp = compare(), std::vector<T>& dest){
             int left_idx = left;
             int mid_idx = mid;
             for (int idx = left; idx < right; idx++){
-                if (left_idx < middle && (mid_idx >= right || comp(array[left_idx], array[mid_idx]))){
-                    array[idx] = copy[left_idx];
+                if (left_idx < middle && (mid_idx >= right || comp(dest[left_idx], dest[mid_idx]))){
+                    dest[idx] = dest[left_idx];
                     left_idx++;
                 } else {
-                    array[idx] = copy[mid_idx];
+                    dest[idx] = dest[mid_idx];
                     mid_idx++;
                 }
             }
@@ -102,19 +111,19 @@ namespace Sort{
         @brief Sorts vector of template object using merge sort function
         @tparam T type of template objects to be swapped
         @tparam Compare type of comparator function used for sorting
-        @param array vector of template object using bubble sort
-        @param comp comparator to be used to sort array
+        @param array vector of template object to be used for saving sorted halves in current step
         @param left lowest index of vector to be sorted
         @param right highest index of vector to be sorted
-        @param copy copy of vector to be used for merging
+        @param comp comparator to be used to sort array
+        @param copy vector of template object to be used for copying sorted halves in current step
         */
         template <typename T, typename Compare = std::less<T>>
         void MSortTopDown(std::vector<T>& array, int left, int right, Compare comp = Compare(), std::vector<T>& copy){
             if (left < right){
                 int mid = (left + right) / 2;
-                MSortTopDown(array, left, mid, comp);
-                MSortTopDown(array, mid+1, right);
-                Merge(array, left, mid, right);
+                MSortTopDown(copy, left, mid, comp, array);
+                MSortTopDown(copy, mid+1, right, comp, array);
+                Merge(copy, left, mid, right, comp, array);
             }
         }
     }
@@ -122,7 +131,7 @@ namespace Sort{
         @brief Sorts vector of template object using bubble sort
         @tparam T type of template objects to be swapped
         @tparam Compare type of comparator function used for sorting
-        @param array vector of template object using bubble sort
+        @param array vector of template object  to be sorted
         @param comp comparator to be used to sort array
     */
     template <typename T, typename Compare = std::less<T>>
@@ -142,7 +151,7 @@ namespace Sort{
         @brief Sorts vector of template object using selection sort
         @tparam T type of template objects to be swapped
         @tparam Compare type of comparator function used for sorting
-        @param array vector of template object using bubble sort
+        @param array vector of template object to be sorted
         @param comp comparator to be used to sort array
     */
     template <typename T, typename Compare = std::less<T>>
@@ -165,7 +174,7 @@ namespace Sort{
         @brief Sorts vector of template object using general quicksort function
         @tparam T type of template objects to be swapped
         @tparam Compare type of comparator function used for sorting
-        @param array vector of template object using bubble sort
+        @param array vector of template object to be sorted
         @param comp comparator to be used to sort array
     */
     template <typename T, typename Compare = std::less<T>>
@@ -178,7 +187,7 @@ namespace Sort{
         @brief Sorts vector of template object using insertion sort function
         @tparam T type of template objects to be swapped
         @tparam Compare type of comparator function used for sorting
-        @param array vector of template object using bubble sort
+        @param array vector of template object to be sorted
         @param comp comparator to be used to sort array
     */
     template <typename T, typename Compare = std::less<T>>
@@ -200,14 +209,34 @@ namespace Sort{
         @brief Sorts vector of template object using top down variant of merge sort
         @tparam T type of template objects to be swapped
         @tparam Compare type of comparator function used for sorting
-        @param array vector of template object using bubble sort
+        @param array vector of template object to be sorted
         @param comp comparator to be used to sort array
     */
     template <typename T, typename Compare = std::less<T>>
     void MergeSortTopDown(std::vector<T>& array, Compare comp = Compare()){
         if (array.size() == 0) return;
-        std::vector<T> copy(array);
+        std::vector<T> copy{array};
         detail::MSortTopDown(array, 0, array.size()-1, comp, copy);
+    }
+
+    /**
+        @brief Sorts vector of template object using bottom up variant of merge sort
+        @tparam T type of template objects to be swapped
+        @tparam Compare type of comparator function used for sorting
+        @param array vector of template object to be sorted
+        @param comp comparator to be used to sort array
+    */
+    template <typename T, typename Compare = std::less<T>>
+    void MergeSortBottomUp(std::vector<T>& array, Compare comp = Compare()){
+        if (array.size() == 0) return;
+        size_t arr_size = array.size();
+        std::vector<T> copy{array};
+        for (int size = 1; size < arr_size; size *= 2){
+            for (int idx = 0; idx < arr_size; idx = idx + 2*size){
+                detail::Merge(array, idx, std::min(idx + size, arr_size), std::min(idx + 2*size), comp, copy)
+            }
+            array = copy;
+        }
     }
 }
 
