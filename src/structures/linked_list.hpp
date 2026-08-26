@@ -76,6 +76,9 @@ public:
     */
     void DeleteFirst(){
         if (first != nullptr){
+            if (first == active){
+                active = nullptr;
+            }
             Node* tmp = first;
             first = first->next;
             delete tmp;
@@ -133,13 +136,13 @@ public:
      *  @return number of nodes in linked list
     */
     int Length(){
-        int size = 0;
+        int length = 0;
         First();
         while(IsActive()){
-            size++;
+            length++;
             Next();
         }
-        return size;
+        return length;
     }
     /**
      *  @brief Reverses linked list
