@@ -142,6 +142,22 @@ public:
         return size;
     }
     /**
+     *  @brief Reverses linked list
+    */
+    void Reverse(){
+        if (IsActive()){
+            First();
+            Next();
+            Node* tmp = first;
+            while(active != nullptr){
+                tmp->next = active->next;
+                active->next = tmp;
+                first = active;
+                active = tmp->next;
+            }
+        }
+    }
+    /**
      *  @brief Destructor of linked list, deletes all nodes in linked list
     */
     ~LinkedList(){
