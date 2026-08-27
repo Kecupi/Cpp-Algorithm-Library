@@ -68,11 +68,9 @@ public:
     */
     void Pop(){
         if (!IsEmpty()){
-            if (Size() != 0){
-                Node* tmp = top;
-                top = tmp->prev;
-                delete tmp;
-            }
+            Node* tmp = top;
+            top = tmp->prev;
+            delete tmp;
         }
     }
     /**
