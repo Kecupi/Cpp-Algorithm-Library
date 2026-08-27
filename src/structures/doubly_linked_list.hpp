@@ -20,17 +20,32 @@
 #include <vector>
 #include <stdexcept>
 
+/** 
+ *  @brief Implementation of Doubly Linked List data structure
+ *  @tparam T Template for data type of values contained in nodes of the list
+*/
 template <typename T>
 Class DoublyLinkedList{
 public:
+    /**
+     *  @brief Initializes DoublyLinkedList class
+    */
     DoublyLinkedList(){
         first = nullptr;
         last = nullptr;
         active = nullptr;
     }
+    /**
+     *  @brief Checks if doubly linked list is currently active
+     *  @return true if active, false otherwise
+    */
     bool IsActive(){
         return active != nullptr;
     }
+    /**
+     *  @brief Inserts node with data at the start of the doubly linked list
+     *  @param data data to be inserted into list
+    */
     void InsertFirst(T data){
         Node* tmp = new Node;
         tmp->data = data;
@@ -43,6 +58,10 @@ public:
         }
         first = tmp;
     }
+    /**
+     *  @brief Inserts node with data at the end of the doubly linked list
+     *  @param data data to be inserted into list
+    */
     void InsertLast(T data){
         Node* tmp = new Node;
         tmp->data = data;
@@ -55,24 +74,39 @@ public:
         }
         last = tmp;
     }
+    /**
+     *  @brief Returns value saved in first node of the doubly linked list
+     *  @return value saved in first node, error if list empty
+    */
     T GetFirst(){
         if (first == nullptr){
             throw std::underflow_error("Can't get value of first in empty list");
         }
         return first->data;
     }
+    /**
+     *  @brief Returns value saved in last node of the doubly linked list
+     *  @return value saved in last node, error if list empty
+    */
     T GetLast(){
         if (last == nullptr){
             throw std::underflow_error("Can't get value of last in empty list");
         }
         return last->data;
     }
+    /**
+     *  @brief Returns value saved in active node
+     *  @return value saved in active node, error if list inactive
+    */
     T GetValue(){
         if (IsActive()){
             return active->data;
         }
         throw std::underflow_error("Can't get value of active in inactive list");
     }
+    /**
+     *  @brief Deletes first node of doubly linked list
+    */
     void DeleteFirst(){
         if (first != nullptr){
             if (first == active){
@@ -83,11 +117,15 @@ public:
                 first = first->next;
                 first->prev = nullptr;
             } else {
+                first = nullptr;
                 last = nullptr;
             }
             delete tmp;
         }
     }
+    /**
+     *  @brief Deletes last node of doubly linked list
+    */
     void DeleteLast(){
         if (last != nullptr){
             if (last == active){
@@ -99,31 +137,52 @@ public:
                 last->next = nullptr;
             } else {
                 first = nullptr;
+                last = nullptr;
             }
             delete tmp;
         }
     }
+    /**
+     *  @brief Sets first node as active node
+    */
     void First(){
         active = first;
     }
+    /**
+     *  @brief Moves active node pointer to node behind active node
+    */
     void Next(){
         if (IsActive()){
             active = active->next;
         }
     }
+    /**
+     *  @brief Moves active node pointer to node before active node
+    */
     void Previous(){
         if (IsActive()){
             active = active->prev;
         }
     }
+    /**
+     *  @brief Sets last node as active node
+    */
     void Last(){
         active = last;
     }
+    /**
+     *  @brief Sets value inside active node
+     *  @param data value to be saved inside active node
+    */
     void SetValue(T data){
         if (IsActive()){
             active->data = data;
         }
     }
+    /**
+     *  @brief Inserts node after active node
+     *  @param data value saved in new node
+    */
     void InsertAfter(T data){
         if (IsActive()){
             Node* new_node = new Node;
@@ -138,6 +197,10 @@ public:
             }
         }
     }
+    /**
+     *  @brief Inserts node before active node
+     *  @param data value saved in new node
+    */
     void InsertBefore(T data){
         if (IsActive()){
             Node* new_node = new Node;
@@ -152,6 +215,9 @@ public:
             }
         }
     }
+    /**
+     *  @brief Deletes node after active node
+    */
     void DeleteAfter(){
         if (IsActive()){
             if (active->next != nullptr){
@@ -166,6 +232,9 @@ public:
             }
         }
     }
+    /**
+     *  @brief Deletes node before active node
+    */
     void DeleteBefore(){
         if (IsActive()){
             if (active->prev != nullptr){
@@ -180,6 +249,10 @@ public:
             }
         }
     }
+    /**
+     *  @brief Returns length of linked list
+     *  @return number of nodes in linked list
+    */
     int Length(){
         int length = 0;
         First();
@@ -188,6 +261,39 @@ public:
             Next();
         }
         return length;
+    }
+    /**
+     *  @brief Reverses doubly linked list
+    */
+    void Reverse(){
+        if (IsActive()){
+            First();
+            Next();
+            Node* tmp = first;
+            while(IsActive()){
+                tmp->next = active->next;
+                active->next = first;
+                active->prev = nullptr;
+                first->prev = active;
+                if (active == last){
+                    last = tmp;
+                } else {
+                    tmp->next->prev = tmp;
+                }
+                first = active;
+                active = tmp->next;
+            }
+        }
+    }
+    /**
+     *  @brief Destructor of doubly linked list, deletes all nodes
+    */
+    ~DoublyLinkedList(){
+        while(first != nullptr){
+            DeleteFirst();
+        }
+        active = nullptr;
+        last = nullptr;
     }
 private:
     struct Node{

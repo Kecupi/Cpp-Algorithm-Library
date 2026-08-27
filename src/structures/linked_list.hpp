@@ -152,7 +152,7 @@ public:
             First();
             Next();
             Node* tmp = first;
-            while(active != nullptr){
+            while(IsActive()){
                 tmp->next = active->next;
                 active->next = tmp;
                 first = active;
