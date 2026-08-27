@@ -2,7 +2,7 @@
     Project: Algorithm Library
     File: doubly_linked_list.hpp
     Date created: 26. 8. 2026
-    Last changed: 26. 8. 2026
+    Last changed: 27. 8. 2026
     Author: Stepan Horenek
     
     Description: Impelementation of doubly linked list using templates
@@ -304,4 +304,4 @@ private:
     Node* first;
     Node* last;
     Node* active;
-}
+};

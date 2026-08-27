@@ -2,7 +2,7 @@
     Project: Algorithm Library
     File: linked_list.hpp
     Date created: 26. 8. 2026
-    Last changed: 26. 8. 2026
+    Last changed: 27. 8. 2026
     Author: Stepan Horenek
     
     Description: Impelementation of linked list using templates
@@ -176,4 +176,4 @@ private:
     };
     Node* first; // pointer to first node
     Node* active; // pointer to active node
-}
+};
