@@ -31,6 +31,7 @@ public:
     AVL_tree(){
         root = nullptr;
     }
+
     /**
      *  @brief Function for inserting keys with data into tree
      *  @param key Key dictating location of node
@@ -70,6 +71,85 @@ public:
         }
         Balance();
     }
+
+    /**
+     *  @brief Function for deleting nodes
+     *  @param key Key of node to be deleted
+    */
+    void Delete(T key){
+        if (root == nullptr){
+            return;
+        }
+        Node* current = root;
+        Node* prev = nullptr;
+        bool left = false;
+        while (current != nullptr){
+            if (current->key > key){
+                prev = current;
+                current = current->left;
+                left = true;
+            } else if (current->key < key){
+                prev = current;
+                current = current->right;
+                left = false;
+            } else {
+                if (current->left == nullptr && current->right == nullptr){
+                    if (prev == nullptr){
+                        root = nullptr;
+                    } else {
+                        if (left){
+                            prev->left = nullptr;
+                        } else {
+                            prev->right = nullptr;
+                        }
+                    }
+                } else (current->left == nullptr){
+                    if (prev == nullptr){
+                        root = root->right;
+                    } else {
+                        if (left){
+                            prev->left = current->right;
+                        } else {
+                            prev->right = current->right;
+                        }
+                    }
+                } else (current->right == nullptr){
+                    if (prev == nullptr){
+                        root = root->left;
+                    } else {
+                        if (left){
+                            prev->left = current->left;
+                        } else {
+                            prev->right = current->left;
+                        }
+                    }
+                } else {
+                    Node* help = prev->left;
+                    Node* help_prev = nullptr;
+                    while(help->right != nullptr){
+                        help_prev = help;
+                        help = help->right;
+                    }
+                    if (help_prev == nullptr){
+
+                    } else {
+                        help_prev->right = nullptr;
+                        help->right = current->right;
+                        if (left){
+                            prev->left = help;
+                        } else {
+                            prev->right = help;
+                        }
+                    }
+                }
+                delete current;
+                Balance();
+                return;
+            }
+        }
+        return;
+    }
+
 
 private:
     /**
