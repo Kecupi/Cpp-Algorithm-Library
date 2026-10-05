@@ -37,7 +37,7 @@ public:
      *  @param key Key dictating location of node
      *  @param value Value to be saved inside node
     */
-    void Insert(T key, T value){
+    void Insert(T key, S value){
         Node* new_node = new Node;
         Node* current = root;
         new_node->key = key;
@@ -70,6 +70,24 @@ public:
             }
         }
         Balance();
+    }
+    /**
+     *  @brief Returns pointer containing value of node based on key
+     *  @param key key of node containing value
+     *  @return pointer to value if found, nullptr if not present
+    */
+    const S* Search(T key){
+        Node* tmp = root;
+        while (tmp != nullptr){
+            if (tmp->key == key){
+                return &(tmp->value);
+            } else if (tmp->key > key){
+                tmp = tmp->right;
+            } else if (tmp->key < key){
+                tmp = tmp->left;
+            }
+        }
+        return nullptr;
     }
 
     /**
