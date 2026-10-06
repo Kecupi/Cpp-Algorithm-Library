@@ -170,11 +170,39 @@ public:
 
 private:
     /**
-     *  @brief Private function for balancing the tree
+     *  @brief Private function for balancing the tree)
+     *  @param parent_node Parent of the node on whose children was performated operation
     */
-    void Balance(){
-        return;
+    void Balance(Node* parent_node){
+        if (parent_node == nullptr){
+            return;
+        }
+        int height = std::max(Max_Height(parent_node->left), Max_Height(parent_node->right));
     }
+
+    /**
+     *  @brief Returns nodes balance factor
+     *  @param node_ptr Node whose balance is to be returned
+     *  @return Balance factor, -1 if nullptr
+    */
+    int Get_Balance(Node* node_ptr){
+        if (node_ptr == nullptr){
+            return -1;
+        }
+        return Get_Height(node_ptr->right) - Get_Height(node_ptr->left);
+    }
+
+    /**
+     *  @brief Sets height to max height of node children
+     *  @param node_ptr Node whose height will be changed
+    */
+    void Max_Height(Node* node_ptr){
+        if (node_ptr == nullptr){
+            return;
+        }
+        node_ptr->height = 1 + std::max(Get_Height(node_ptr->left), Get_Height(node_ptr->right));
+    }
+
 
     /**
      *  @brief Creates tree nodes
@@ -186,6 +214,7 @@ private:
         Node* new_node = new Node;
         new_node->key = key;
         new_node->value = value;
+        new_node->balance = 0;
         new_node->left = nullptr;
         new_node->right = nullptr;
         return new_node;
@@ -194,6 +223,7 @@ private:
     struct Node{
         T key;          /**< Key used for searching tree */
         S value;        /**< Value saved in node */
+        int height;     /**< Max height of node */
         Node* left;     /**< Left child node */
         Node* right;    /**< Right child node */
     }
