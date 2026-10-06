@@ -38,39 +38,38 @@ public:
      *  @param value Value to be saved inside node
     */
     void Insert(T key, S value){
-        Node* new_node = new Node;
         Node* current = root;
-        new_node->key = key;
-        new_node->value = value;
-        new_node->left = nullptr;
-        new_node->right = nullptr;
+        Node* balance_node = nullptr;
         if (root == nullptr){
-            root = new_node;
+            root = Create_Node(key, value);
             return;
         }
         while (true){
-            if (new_node->key > current->key){
+            if (key > current->key){
                 if (current->right = nullptr){
-                    current->right = new_node;
-                    break;
+                    current->right = Create_Node(key, value);
+                    Balance(balance_node);
+                    return;
                 } else {
+                    balance_node = current;
                     current = current->right;
                 }
-            } else if (new_node->key < current->key){
+            } else if (key < current->key){
                 if (current->left = nullptr){
-                    current->left = new_node;
-                    break;
+                    current->left = Create_Node(key, value);
+                    Balance(balance_node);
+                    return;
                 } else {
+                    balance_node = current;
                     current = current->left;
                 }
             } else {
-                delete new_node;
-                current->value = new_node->value;
-                break;
+                current->value = value;
+                return;
             }
         }
-        Balance();
     }
+    
     /**
      *  @brief Returns pointer containing value of node based on key
      *  @param key key of node containing value
@@ -175,6 +174,21 @@ private:
     */
     void Balance(){
         return;
+    }
+
+    /**
+     *  @brief Creates tree nodes
+     *  @param key Key of node
+     *  @param value Value to be save inside node
+     *  @return Node pointer on success, nullptr if allocation fails
+    */
+    Node* Create_Node(T key, S value){
+        Node* new_node = new Node;
+        new_node->key = key;
+        new_node->value = value;
+        new_node->left = nullptr;
+        new_node->right = nullptr;
+        return new_node;
     }
 
     struct Node{
