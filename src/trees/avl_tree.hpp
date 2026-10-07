@@ -39,6 +39,7 @@ public:
     */
     void Insert(T key, S value){
         Node* current = root;
+        std::vector<Node*> traversed;
         Node* balance_node = nullptr;
         if (root == nullptr){
             root = Create_Node(key, value);
@@ -52,6 +53,7 @@ public:
                     return;
                 } else {
                     balance_node = current;
+                    traversed.emplace_back(current);
                     current = current->right;
                 }
             } else if (key < current->key){
@@ -61,6 +63,7 @@ public:
                     return;
                 } else {
                     balance_node = current;
+                    traversed.emplace_back(current);
                     current = current->left;
                 }
             } else {
@@ -170,6 +173,36 @@ public:
 
 private:
     /**
+     *  @brief Performs left rotation
+     *  @param node_ptr Too heavy node to be rotated
+     *  @return Ptr of new subroot node
+    */
+    Node* Rotate_Left(Node* node_ptr){
+        Node* swp = node_ptr->right;
+        Node* swp_son = swp->left;
+        swp->left = node_ptr;
+        node_ptr->right = swp_son;
+        Max_Height(node_ptr);
+        Max_Height(swp);
+        return swp;
+    }
+
+    /**
+     *  @brief Performs right rotation
+     *  @param node_ptr Too heavy node to be rotated
+     *  @return Ptr of new subroot node
+    */
+    Node* Rotate_Right(Node* node_ptr){
+        Node* swp = node_ptr->left;
+        Node* swp_son = node_ptr->left->right;
+        swp->right = node_ptr;
+        node_ptr->left = swp_son;
+        Max_Height(node_ptr);
+        Max_Height(swp);
+        return node_ptr;
+    }
+
+    /**
      *  @brief Private function for balancing the tree)
      *  @param parent_node Parent of the node on whose children was performated operation
     */
@@ -190,6 +223,18 @@ private:
             return -1;
         }
         return Get_Height(node_ptr->right) - Get_Height(node_ptr->left);
+    }
+
+    /**
+     *  @brief Returns height of node
+     *  @param node_ptr Node with height to be returned
+     *  @return 
+    */
+    int Get_Height(Node* node_ptr){
+        if (node_ptr == nullptr){
+            return -1;
+        }
+        return node_ptr->height;
     }
 
     /**
